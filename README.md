@@ -18,8 +18,7 @@ In this step we are going to install the Helm package manager so we can later ea
 install the different FaaS frameworks.
 
 ```
-$ make install-helm
-$ make init-helm
+$ make helm-install helm-init
 ```
 
 ## Maintainer
