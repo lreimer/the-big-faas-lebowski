@@ -12,13 +12,14 @@ following command fire up the infrastructure:
 $ make prepare cluster
 ```
 
-### Step 2: Install Helm
+### Step 2: Install and Initialize Helm
 
 In this step we are going to install the Helm package manager so we can later easily
 install the different FaaS frameworks.
 
 ```
-$ make helm-install
+$ make install-helm
+$ make init-helm
 ```
 
 ## Maintainer
