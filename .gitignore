@@ -9,6 +9,9 @@ out/
 fission/fission/
 fission/fission-workflow/
 kubeless/kubeless/
+fnproject/fn/
+fnproject/fn-helm/
+fnproject/hello/
 
 # Ignore Gradle GUI config
 gradle-app.setting

@@ -1,0 +1,160 @@
+# Default values for Fn
+imagePullPolicy: Always
+
+# If non-null, will override the cluster name
+nameOverride: ''
+
+## Ingress configuration.
+## ref: https://kubernetes.io/docs/user-guide/ingress/
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: traefik
+#    certmanager.k8s.io/cluster-issuer: letsencrypt-staging
+#    kubernetes.io/tls-acme: “true”
+
+# secret refernce is a k8s secret to your
+tls:
+  enabled: false
+  default_issuer_name: letsencrypt-staging
+  acme_registration_email: <mario-leander.reimer@qaware.de>
+#  secret_reference: fn-tls
+  server: https://acme-staging-v02.api.letsencrypt.org/directory
+
+
+# Fn runner deployment definition
+# Nodes in this deployment responsible for the functions execution
+fn_runner:
+  replicas: 3 # number of replicas of Fn runner to deploy, recommended: 3 or greater
+  image: fnproject/fnserver # Fn server image
+  tag: latest # Fn server image tag
+  resources: # K8s computation resources
+    requests:
+      memory: "1Gi"
+      cpu: "250m"
+    limits:
+      memory: "5Gi"
+      cpu: "500m"
+  nodeSelector: {} # K8s node selectors
+  tolerations: [] #K8s mode taint toleration
+  grpc_port: 9191 # Fn runner node GRPC port
+  service:
+    grpc_port: 9191 # Fn runner service GRPC port
+    type: ClusterIP # Fn runner service type
+    annotations: {} # Fn runner service annotations
+  env:
+    FN_LOG_LEVEL: INFO
+
+fn_lb_runner:
+  image: fnproject/fnserver
+  tag: latest
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "150m"
+    limits:
+      memory: "2Gi"
+      cpu: "300m"
+  nodeSelector: {}
+  tolerations: []
+  container_port: 90 # Fn runner LB container port
+  grpc_port: 9191
+  service:
+    port: 90 # Fn runner LB service port to expose
+    type: LoadBalancer
+    annotations: {}
+    ingress_hostname: lb.fn.internal # Ingress controller routing host, can be random URL host.
+  env:
+    FN_LOG_LEVEL: INFO
+
+fn_api:
+  image: fnproject/fnserver
+  tag: latest
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "150m"
+    limits:
+      memory: "2Gi"
+      cpu: "300m"
+  nodeSelector: {}
+  tolerations: []
+  container_port: 80 # Fn API container port
+  service:
+    port: 80 # Fn API service port to expose
+    type: LoadBalancer
+    annotations: {}
+    ingress_hostname: api.fn.internal
+  env:
+    FN_DB_URL: mysql://fnapp:$(FN_DB_PASSWD)@tcp($(FN_DB_HOST):3306)/fndb
+    FN_MQ_URL: redis://$(FN_MQ_HOST):6379/
+    FN_LOG_LEVEL: INFO
+
+ui:
+  enabled: true
+  flowui:
+    image: fnproject/flow
+    tag: ui
+    resources:
+      requests:
+        memory: "512Mi"
+        cpu: "150m"
+      limits:
+        memory: "2Gi"
+        cpu: "300m"
+  service:
+    port: 3000
+    type: ClusterIP
+    annotations: {}
+    ingress_hostname: ui.fn.internal
+
+flow:
+  image: fnproject/flow
+  tag: 0.1.85
+  logLevel: info
+  service:
+    port: 80
+    type: ClusterIP
+    annotations: {}
+    ingress_hostname: flow.fn.internal
+  resources: # K8s computation resources
+    requests:
+      memory: "1Gi"
+      cpu: "250m"
+    limits:
+      memory: "5Gi"
+      cpu: "500m"
+
+##
+## MySQL chart configuration
+##
+mysql:
+  persistence:
+    enabled: false
+    nodeSelector: mysql-storage
+    ## If defined, volume.beta.kubernetes.io/storage-class: <storageClass>
+    ## Default: volume.alpha.kubernetes.io/storage-class: default
+    ##
+    # storageClass:
+    storageClass: mysql
+    accessMode: ReadWriteOnce
+    size: 8Gi
+
+  mysqlDatabase: fndb
+  mysqlUser: fnapp
+  mysqlPassword: boomsauce
+
+##
+## Redis chart configuration
+##
+redis:
+  persistence:
+    enabled: false
+    nodeSelector: redis-storage
+    storageClass: redis
+    accessMode: ReadWriteOnce
+    size: 8Gi
+  usePassword: false
+
+rbac:
+  enabled: true

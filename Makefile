@@ -46,6 +46,7 @@ fission-install:
 	# @helm install --name fission --namespace fission https://github.com/fission/fission/releases/download/1.1.0/fission-all-1.1.0.tgz
 
 fission-delete:
+	@helm delete --purge fission
 	@$(K8S) delete crd canaryconfigs.fission.io --ignore-not-found=true
 	@$(K8S) delete crd environments.fission.io --ignore-not-found=true
 	@$(K8S) delete crd functions.fission.io --ignore-not-found=true
@@ -72,6 +73,18 @@ kubeless-delete:
 	@$(K8S) delete crd httptriggers.kubeless.io --ignore-not-found=true
 	@$(K8S) delete ns kubeless
 	@rm -rf kubeless/kubeless/
+
+fnproject-install:
+	@mkdir -p fnproject && rm -rf fnproject/fn/ && rm -rf fnproject/fn-helm
+	@git clone --depth 1 https://github.com/fnproject/fn.git fnproject/fn
+	@git clone --depth 1 https://github.com/fnproject/fn-helm.git fnproject/fn-helm
+	@curl -LSs https://raw.githubusercontent.com/fnproject/cli/master/install | sh
+	@helm install --name cert-manager --namespace kube-system --set ingressShim.defaultIssuerName=letsencrypt-staging --set ingressShim.defaultIssuerKind=ClusterIssuer stable/cert-manager --version v0.3.0
+	@cd fnproject/fn-helm && helm dep build fn && helm install --name fnproject -f ../values.yaml fn
+
+fnproject-delete:
+	@rm -rf fnproject/fn/ && rm -rf fnproject/fn-helm
+	@helm delete --purge fnproject
 
 gcloud-login:
 	@$(GCP) auth application-default login
