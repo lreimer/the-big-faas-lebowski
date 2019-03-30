@@ -8,10 +8,21 @@ out/
 
 fission/fission/
 fission/fission-workflow/
+
 kubeless/kubeless/
+
 fnproject/fn/
 fnproject/fn-helm/
 fnproject/hello/
+
+openfaas/faas/
+openfaas/faas-netes/
+openfaas/templates/
+
+nuclio/credentials.json
+nuclio/nuctl
+nuclio/nuclio/
+nuclio/templates/
 
 # Ignore Gradle GUI config
 gradle-app.setting

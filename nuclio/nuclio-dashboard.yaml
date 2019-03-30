@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nuclio-dashboard
+  namespace: nuclio
+spec:
+  type: LoadBalancer
+  selector:
+    nuclio.io/app: dashboard
+  ports:
+  - name: admin
+    port: 8070
+    protocol: TCP
