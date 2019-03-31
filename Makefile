@@ -101,14 +101,17 @@ openfaas-sources:
 	@mkdir -p openfaas && rm -rf openfaas/faas/ && rm -rf openfaas/faas-netes/
 	@git clone --depth 1 https://github.com/openfaas/faas.git openfaas/faas
 	@git clone --depth 1 https://github.com/openfaas/faas-netes.git openfaas/faas-netes
-	@git clone --depth 1 https://github.com/openfaas/templates.git openfaas/templates
 
 openfaas-install:
 	@curl -sL https://cli.openfaas.com | sudo sh
 	@$(K8S) apply -f openfaas/faas-netes/namespaces.yml
 	@helm repo add openfaas https://openfaas.github.io/faas-netes/
 	@$(K8S) -n openfaas create secret generic basic-auth --from-literal=basic-auth-user=admin --from-literal=basic-auth-password=openfaas
-	@helm upgrade openfaas --install openfaas/openfaas --namespace openfaas --set basic_auth=true --set functionNamespace=openfaas-fn --set operator.create=true --set serviceType=LoadBalancer
+	@helm upgrade openfaas --install openfaas/openfaas --namespace openfaas --set basic_auth=true --set functionNamespace=openfaas-fn --set operator.create=true --set serviceType=LoadBalancer --set ingress.enabled=true
+	@$(K8S) apply -f openfaas/openfaas-ui.yaml
+	@$(K8S) apply -f openfaas/openfaas-gateway.yaml
+	export OPENFAAS_URL=http://openfaas.demo
+	@http get faas-cli login --password openfaas
 
 openfaas-delete:
 	@helm delete --purge openfaas

@@ -47,7 +47,7 @@ the external IP from the `traefik-ingress-service`.
 34.76.182.176  nuclio-ui.demo
 34.76.182.176  fission.demo
 34.76.182.176  kubeless.demo
-34.76.182.176  openfaas.demo
+34.76.182.176  openfaas.demo gateway.openfaas.local
 ```
 
 ## Fission Demo
@@ -110,7 +110,18 @@ $ make openfaas-sources
 $ make openfaas-install
 $ kubectl get all -n openfaas
 
-$ export OPENFAAS_URL=http://34.76.156.143:8080
+$ export OPENFAAS_URL=http://openfaas.demo
+
+$ cd openfaas
+$ faas template pull https://github.com/openfaas-incubator/golang-http-template
+
+$ faas build -f hello-openfaas.yml
+$ faas push -f hello-openfaas.yml
+$ faas deploy -f hello-openfaas.yml
+
+$ http get http://openfaas.demo/function/hello-openfaas
+$ hey -c 50 -n 1000 http://openfaas.demo/function/hello-openfaas
+$ wrk -c 50 -t 4 -d 30s http://openfaas.demo/function/hello-openfaas
 
 $ make openfaas-delete
 ```

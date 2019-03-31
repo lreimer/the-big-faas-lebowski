@@ -17,7 +17,7 @@ fnproject/hello/
 
 openfaas/faas/
 openfaas/faas-netes/
-openfaas/templates/
+openfaas/template/
 
 nuclio/credentials.json
 nuclio/nuctl
@@ -35,3 +35,6 @@ gradle-app.setting
 
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
+
+template
+build
