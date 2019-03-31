@@ -53,8 +53,8 @@ fission-sources:
 	@git clone --depth 1 https://github.com/fission/fission-workflow.git fission/fission-workflow
 
 fission-install:
-	# we could also use the fission-all Helm chart
-	@helm install --name fission --namespace fission https://github.com/fission/fission/releases/download/1.1.0/fission-core-1.1.0.tgz
+	# we could also use the fission-core Helm chart
+	@helm install --name fission --namespace fission https://github.com/fission/fission/releases/download/1.1.0/fission-all-1.1.0.tgz
 
 fission-delete:
 	@helm delete --purge fission
