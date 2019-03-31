@@ -1,0 +1,17 @@
+apiVersion: "nuclio.io/v1beta1"
+kind: "NuclioFunction"
+spec:
+  runtime: "golang"
+  minReplicas: 1
+  maxReplicas: 1
+  handler: main:Handler
+  triggers:
+    http:
+      maxWorkers: 8
+      kind: http
+      attributes:
+        ingresses:
+          nuclio-demo:
+            host: nuclio.demo
+            paths:
+            - /hello-nuclio

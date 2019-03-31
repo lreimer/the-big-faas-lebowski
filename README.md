@@ -86,11 +86,12 @@ $ make nuclio-install
 $ kubectl get all -n nuclio
 
 $ cd nuclio/
-$ ./nuctl --path hello-nuclio/
+$ ./nuctl create project hello-nuclio -n nuclio
+$ ./nuctl deploy hello-nuclio --path hello-nuclio/main.go --project-name hello-nuclio -n nuclio
 
 $ http get http://nuclio.demo/hello-nuclio
-$ hey -c 50 -n 100 http://nuclio.demo/hello-nuclio
-$ wrk -c 50 -t 4 -d 1m http://nuclio.demo/hello-nuclio
+$ hey -c 50 -n 1000 http://nuclio.demo/hello-nuclio
+$ wrk -c 50 -t 4 -d 30s http://nuclio.demo/hello-nuclio
 
 $ make nuclio-delete
 ```
