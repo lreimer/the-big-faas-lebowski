@@ -4,8 +4,8 @@ GCP = gcloud
 ZONE = europe-west1-b
 K8S = kubectl
 
-DOCKER_USERNAME?=lreimer
-DOCKER_PASSWORD?=
+DOCKER_USERNAME ?= lreimer
+DOCKER_PASSWORD ?=
 
 .PHONY: info
 
@@ -53,8 +53,8 @@ fission-sources:
 	@git clone --depth 1 https://github.com/fission/fission-workflow.git fission/fission-workflow
 
 fission-install:
+	# we could also use the fission-all Helm chart
 	@helm install --name fission --namespace fission https://github.com/fission/fission/releases/download/1.1.0/fission-core-1.1.0.tgz
-	# @helm install --name fission --namespace fission https://github.com/fission/fission/releases/download/1.1.0/fission-all-1.1.0.tgz
 
 fission-delete:
 	@helm delete --purge fission
@@ -150,5 +150,5 @@ dashboard:
 	@$(GCP) config config-helper --format=json | jq .credential.access_token
 	@open http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
 
-clean:
+destroy:
 	@$(GCP) container clusters delete $(NAME) --async --quiet

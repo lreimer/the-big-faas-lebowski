@@ -11,3 +11,18 @@ spec:
   - name: admin
     port: 8070
     protocol: TCP
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: nuclio-ui
+  namespace: nuclio
+spec:
+  rules:
+  - host: nuclio-ui.demo
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: nuclio-dashboard
+          servicePort: admin

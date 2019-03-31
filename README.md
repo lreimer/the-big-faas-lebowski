@@ -52,18 +52,69 @@ the external IP from the `traefik-ingress-service`.
 
 ## Fission Demo
 
+```
+$ make fission-sources
+$ make fission-install
+$ kubectl get all -n fission
+
+$ cd fission/
+$ fission environment create --name go --image fission/go-env --builder fission/go-builder
+$ kubectl get all -n fission-builder
+$ kubectl get all -n fission-function
+
+$ fission fn create --name hello-fission --env go --src hello-fission.go --entrypoint Handler
+$ fission pkg info --name <pkg-name>
+$ fission function list
+$ fission fn test --name hello-fission
+
+$ fission route create --name hello-http --function hello-fission --url /hello-fission --createingress --method GET --host fission.demo
+
+$ http get http://fission.demo/hello-fission
+$ hey -c 50 -n 1000 http://fission.demo/hello-fission
+$ wrk -c 50 -t 4 -d 30s http://fission.demo/hello-fission
+
+$ make fission-delete
+```
+
 ## Kubeless Demo
 
 ## Nuclio Demo
 
-kubectl get secrets registry-credentials -n nuclio -o 'go-template={{index .data ".dockerconfigjson"}}' | base64 -D
+```
+$ make nuclio-sources
+$ make nuclio-install
+$ kubectl get all -n nuclio
+
+$ cd nuclio/
+$ ./nuctl --path hello-nuclio/
+
+$ http get http://nuclio.demo/hello-nuclio
+$ hey -c 50 -n 100 http://nuclio.demo/hello-nuclio
+$ wrk -c 50 -t 4 -d 1m http://nuclio.demo/hello-nuclio
+
+$ make nuclio-delete
+```
+
+In case Nuclio has trouble accessing the Docker registry, make sure you have the correct credentials
+set in the Kubernetes secret.
+
+```
+$ kubectl get secrets registry-credentials -n nuclio -o 'go-template={{index .data ".dockerconfigjson"}}' | base64 -D
+```
 
 ## OpenFaas Demo
 
-## Fn Project Demo
+```
+$ make openfaas-sources
+$ make openfaas-install
+$ kubectl get all -n openfaas
 
-First, we need to install Fn Project in our cluster using the Helm chart. The we are going to create
-a simple Go function and deploy it.
+$ export OPENFAAS_URL=http://34.76.156.143:8080
+
+$ make openfaas-delete
+```
+
+## Fn Project Demo
 
 ```
 $ make fnproject-sources
