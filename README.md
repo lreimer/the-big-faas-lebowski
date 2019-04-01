@@ -86,10 +86,12 @@ $ kubectl get all -n kubeless
 $ kubeless get-server-config
 
 $ cd kubeless/hello-kubeless/
-$ kubeless function deploy hello-kubeless --from-file func.go --handler func.Handler --runtime go1.10
+$ kubeless function deploy hello-kubeless --from-file func.go --handler func.Handler --runtime go1.10 --cpu 100m
 $ kubeless function call hello-kubeless
 
 $ kubeless trigger http create hello-kubeless --function-name hello-kubeless --path hello-kubeless --gateway traefik --hostname kubeless.demo
+
+$ kubeless autoscale create --min 1 --max 3 --metric cpu --value 75
 
 $ http get http://kubeless.demo/hello-kubeless
 $ hey -c 50 -n 1000 http://kubeless.demo/hello-kubeless
