@@ -78,6 +78,8 @@ $ make fission-delete
 
 ## Kubeless Demo
 
+
+
 ## Nuclio Demo
 
 ```
@@ -146,6 +148,7 @@ $ fn invoke demo hello-fn
 $ fn create trigger --source /hello-fn --type http demo hello-fn hello-http
 $ http get http://fnproject.lb.fn.internal/t/demo/hello-fn
 $ hey -c 50 -n 100 http://fnproject.lb.fn.internal/t/demo/hello-fn
+$ wrk -c 50 -t 4 -d 30s http://fnproject.lb.fn.internal/t/demo/hello-fn
 
 $ make fnproject-delete
 ```

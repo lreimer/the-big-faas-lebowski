@@ -1,0 +1,5 @@
+schema_version: 20180708
+name: hello-fn
+version: 0.0.3
+runtime: go
+entrypoint: ./func
