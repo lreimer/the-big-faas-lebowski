@@ -72,10 +72,13 @@ fission-delete:
 kubeless-sources:
 	@mkdir -p kubeless && rm -rf kubeless/kubeless/
 	@git clone --depth 1 https://github.com/kubeless/kubeless.git kubeless/kubeless
+	@git clone --depth 1 https://github.com/kubeless/kubeless-ui.git kubeless/kubeless-ui
 
 kubeless-install:
 	@$(K8S) create ns kubeless
 	@$(K8S) create -f https://github.com/kubeless/kubeless/releases/download/v1.0.3/kubeless-v1.0.3.yaml
+	@$(K8S) create -f https://raw.githubusercontent.com/kubeless/kubeless-ui/master/k8s.yaml
+	@$(K8S) apply -f kubeless/kubeless-ui.yaml
 
 kubeless-delete:
 	@$(K8S) delete -f https://github.com/kubeless/kubeless/releases/download/v1.0.3/kubeless-v1.0.3.yaml --ignore-not-found=true

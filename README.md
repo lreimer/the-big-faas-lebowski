@@ -47,6 +47,7 @@ the external IP from the `traefik-ingress-service`.
 34.76.182.176  nuclio-ui.demo
 34.76.182.176  fission.demo
 34.76.182.176  kubeless.demo
+34.76.182.176  kubeless-ui.demo
 34.76.182.176  openfaas.demo gateway.openfaas.local
 ```
 
@@ -78,7 +79,24 @@ $ make fission-delete
 
 ## Kubeless Demo
 
+```
+$ make kubeless-sources
+$ make kubeless-install
+$ kubectl get all -n kubeless
+$ kubeless get-server-config
 
+$ cd kubeless/hello-kubeless/
+$ kubeless function deploy hello-kubeless --from-file func.go --handler func.Handler --runtime go1.10
+$ kubeless function call hello-kubeless
+
+$ kubeless trigger http create hello-kubeless --function-name hello-kubeless --path hello-kubeless --gateway traefik --hostname kubeless.demo
+
+$ http get http://kubeless.demo/hello-kubeless
+$ hey -c 50 -n 1000 http://kubeless.demo/hello-kubeless
+$ wrk -c 50 -t 4 -d 30s http://kubeless.demo/hello-kubeless
+
+$ make kubeless-delete
+```
 
 ## Nuclio Demo
 

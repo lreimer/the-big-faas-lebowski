@@ -10,10 +10,10 @@ fission/fission/
 fission/fission-workflow/
 
 kubeless/kubeless/
+kubeless/kubeless-ui/
 
 fnproject/fn/
 fnproject/fn-helm/
-fnproject/hello/
 
 openfaas/faas/
 openfaas/faas-netes/
