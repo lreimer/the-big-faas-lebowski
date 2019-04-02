@@ -54,8 +54,8 @@ fission-sources:
 	@git clone --depth 1 https://github.com/fission/fission-ui.git fission/fission-ui
 
 fission-install:
-	# we could also use the fission-core Helm chart
-	@helm install --name fission --namespace fission https://github.com/fission/fission/releases/download/1.1.0/fission-all-1.1.0.tgz
+	# we could also use the fission-all Helm chart
+	@helm install --name fission --namespace fission https://github.com/fission/fission/releases/download/1.1.0/fission-core-1.1.0.tgz
 	@$(K8S) apply -f fission/fission-ui/docker/fission-ui.yaml
 	@$(K8S) apply -f fission/fission-ui.yaml
 
@@ -117,7 +117,7 @@ openfaas-install:
 	@$(K8S) apply -f openfaas/openfaas-ui.yaml
 	@$(K8S) apply -f openfaas/openfaas-gateway.yaml
 	export OPENFAAS_URL=http://openfaas.demo
-	@http get faas-cli login --password openfaas
+	@faas-cli login --password openfaas
 
 openfaas-delete:
 	@helm delete --purge openfaas

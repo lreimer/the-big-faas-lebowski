@@ -3,7 +3,7 @@ kind: "NuclioFunction"
 spec:
   runtime: "golang"
   minReplicas: 1
-  maxReplicas: 1
+  maxReplicas: 20
   handler: main:Handler
   triggers:
     http:

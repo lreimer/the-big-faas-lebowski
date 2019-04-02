@@ -54,16 +54,15 @@ the external IP from the `traefik-ingress-service`.
 
 ## Fission Demo
 
+This demo deploys a simple Go function. We use a pool manager size of 5 for the go environment.
+
 ```
 $ make fission-sources
 $ make fission-install
 $ kubectl get all -n fission
 
 $ cd fission/
-$ fission environment create --name go --image fission/go-env --builder fission/go-builder
-$ fission env create --name jvm --image fission/jvm-env --version 2 --extract=false
-$ fission environment create --name node --image fission/node-env --mincpu 40 --maxcpu 80 --minmemory 64 --maxmemory 128 --poolsize 4
-$ fission environment create --name python --image fission/python-env:latest --builder fission/python-builder:latest
+$ fission environment create --name go --image fission/go-env --builder fission/go-builder --poolsize 5
 
 $ kubectl get all -n fission-builder
 $ kubectl get all -n fission-function
@@ -76,13 +75,16 @@ $ fission fn test --name hello-fission
 $ fission route create --name hello-http --function hello-fission --url /hello-fission --createingress --method GET --host fission.demo
 
 $ http get http://fission.demo/hello-fission
-$ hey -c 50 -n 1000 http://fission.demo/hello-fission
+$ hey -c 50 -z 30s http://fission.demo/hello-fission
 $ wrk -c 50 -t 4 -d 30s http://fission.demo/hello-fission
 
 $ make fission-delete
 ```
 
 ## Kubeless Demo
+
+This demo deploys a simple Go function. We set CPU limits to 100m so that the configured HPA
+is working correctly. The functions scales from 5 to 20 replicas.
 
 ```
 $ make kubeless-sources
@@ -96,16 +98,20 @@ $ kubeless function call hello-kubeless
 
 $ kubeless trigger http create hello-kubeless --function-name hello-kubeless --path hello-kubeless --gateway traefik --hostname kubeless.demo
 
-$ kubeless autoscale create --min 1 --max 3 --metric cpu --value 75
+$ kubeless autoscale create hello-kubeless --min 5 --max 20 --metric cpu --value 75
+$ kubectl scale deployment hello-kubeless --replicas 5
 
 $ http get http://kubeless.demo/hello-kubeless
-$ hey -c 50 -n 1000 http://kubeless.demo/hello-kubeless
+$ hey -c 50 -z 30s http://kubeless.demo/hello-kubeless
 $ wrk -c 50 -t 4 -d 30s http://kubeless.demo/hello-kubeless
 
 $ make kubeless-delete
 ```
 
 ## Nuclio Demo
+
+This demo deploys a simple Go function that scales up to 20 replicas. The ingress used here
+is Traefik.
 
 ```
 $ make nuclio-sources
@@ -114,15 +120,17 @@ $ kubectl get all -n nuclio
 
 $ cd nuclio/
 $ ./nuctl create project hello-nuclio -n nuclio
-$ ./nuctl deploy hello-nuclio --path hello-nuclio/main.go --project-name hello-nuclio -n nuclio
+$ ./nuctl deploy hello-nuclio --path hello-nuclio/ --project-name hello-nuclio -n nuclio --max-replicas 20
 
+$ open http://nuclio-ui.demo/
 $ http get http://nuclio.demo/hello-nuclio
-$ hey -c 50 -n 1000 http://nuclio.demo/hello-nuclio
+$ hey -c 50 -z 30s http://nuclio.demo/hello-nuclio
 $ wrk -c 50 -t 4 -d 30s http://nuclio.demo/hello-nuclio
 
 $ make nuclio-delete
 ```
 
+Note: sometimes the CLI times out during deployment of the function. Use the dashboard instead.
 In case Nuclio has trouble accessing the Docker registry, make sure you have the correct credentials
 set in the Kubernetes secret.
 
@@ -131,6 +139,10 @@ $ kubectl get secrets registry-credentials -n nuclio -o 'go-template={{index .da
 ```
 
 ## OpenFaas Demo
+
+The OpenFaas demo has been tuned with the help of @alexellis. The function itself has been labeled
+to scale from 5 to 20 pods. The gateway component of OpenFaaS has been scaled to 5 replicas. Also
+have a look at https://docs.openfaas.com/architecture/performance/
 
 ```
 $ make openfaas-sources
@@ -146,8 +158,15 @@ $ faas build -f stack.yml
 $ faas push -f stack.yml
 $ faas deploy -f stack.yml
 
+$ kubectl scale deployment gateway --replicas=5 -n openfaas
+
+$ kubectl get all -n openfaas
+$ http get http://<gateway-external-ip>:8080/function/hello-openfaas
+$ hey -c 50 -z 30s http://<gateway-external-ip>:8080/function/hello-openfaas
+$ wrk -c 50 -t 4 -d 30s http://<gateway-external-ip>:8080/function/hello-openfaas
+
 $ http get http://openfaas.demo/function/hello-openfaas
-$ hey -c 50 -n 1000 http://openfaas.demo/function/hello-openfaas
+$ hey -c 50 -z 30s http://openfaas.demo/function/hello-openfaas
 $ wrk -c 50 -t 4 -d 30s http://openfaas.demo/function/hello-openfaas
 
 $ make openfaas-delete
@@ -170,7 +189,7 @@ $ fn invoke demo hello-fn
 
 $ fn create trigger --source /hello-fn --type http demo hello-fn hello-http
 $ http get http://fnproject.lb.fn.internal/t/demo/hello-fn
-$ hey -c 50 -n 100 http://fnproject.lb.fn.internal/t/demo/hello-fn
+$ hey -c 50 -z 30s http://fnproject.lb.fn.internal/t/demo/hello-fn
 $ wrk -c 50 -t 4 -d 30s http://fnproject.lb.fn.internal/t/demo/hello-fn
 
 $ make fnproject-delete

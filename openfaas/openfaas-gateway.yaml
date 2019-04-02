@@ -10,5 +10,5 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: gateway-external
+          serviceName: gateway
           servicePort: 8080
