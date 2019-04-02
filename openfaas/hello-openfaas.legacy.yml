@@ -2,6 +2,6 @@ provider:
   name: openfaas
 functions:
   hello-openfaas:
-    lang: go
+    lang: golang-
     handler: ./hello-openfaas
     image: lreimer/hello-openfaas:latest
