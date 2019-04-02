@@ -142,9 +142,9 @@ $ export OPENFAAS_URL=http://openfaas.demo
 $ cd openfaas
 $ faas template pull https://github.com/openfaas-incubator/golang-http-template
 
-$ faas build -f hello-openfaas.yml
-$ faas push -f hello-openfaas.yml
-$ faas deploy -f hello-openfaas.yml
+$ faas build -f stack.yml
+$ faas push -f stack.yml
+$ faas deploy -f stack.yml
 
 $ http get http://openfaas.demo/function/hello-openfaas
 $ hey -c 50 -n 1000 http://openfaas.demo/function/hello-openfaas
