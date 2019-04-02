@@ -51,10 +51,13 @@ fission-sources:
 	@mkdir -p fission && rm -rf fission/fission/ && rm -rf fission/fission-workflow/
 	@git clone --depth 1 https://github.com/fission/fission.git fission/fission
 	@git clone --depth 1 https://github.com/fission/fission-workflow.git fission/fission-workflow
+	@git clone --depth 1 https://github.com/fission/fission-ui.git fission/fission-ui
 
 fission-install:
 	# we could also use the fission-core Helm chart
 	@helm install --name fission --namespace fission https://github.com/fission/fission/releases/download/1.1.0/fission-all-1.1.0.tgz
+	@$(K8S) apply -f fission/fission-ui/docker/fission-ui.yaml
+	@$(K8S) apply -f fission/fission-ui.yaml
 
 fission-delete:
 	@helm delete --purge fission

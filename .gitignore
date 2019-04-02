@@ -8,6 +8,7 @@ out/
 
 fission/fission/
 fission/fission-workflow/
+fission/fission-ui/
 
 kubeless/kubeless/
 kubeless/kubeless-ui/

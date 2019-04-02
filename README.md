@@ -46,6 +46,7 @@ the external IP from the `traefik-ingress-service`.
 34.76.182.176  nuclio.demo
 34.76.182.176  nuclio-ui.demo
 34.76.182.176  fission.demo
+34.76.182.176  fission-ui.demo
 34.76.182.176  kubeless.demo
 34.76.182.176  kubeless-ui.demo
 34.76.182.176  openfaas.demo gateway.openfaas.local
@@ -60,6 +61,9 @@ $ kubectl get all -n fission
 
 $ cd fission/
 $ fission environment create --name go --image fission/go-env --builder fission/go-builder
+$ fission environment create --name node --image fission/node-env --mincpu 40 --maxcpu 80 --minmemory 64 --maxmemory 128 --poolsize 4
+$ fission environment create --name python --image fission/python-env:latest --builder fission/python-builder:latest
+
 $ kubectl get all -n fission-builder
 $ kubectl get all -n fission-function
 

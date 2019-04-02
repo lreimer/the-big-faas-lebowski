@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: fission-ui
+  namespace: fission
+spec:
+  rules:
+  - host: fission-ui.demo
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: fission-ui
+          servicePort: 80
