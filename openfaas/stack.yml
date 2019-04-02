@@ -1,0 +1,12 @@
+provider:
+  name: openfaas
+  gateway: http://127.0.0.1:8080
+
+functions:
+  hello-openfaas:
+    lang: golang-middleware
+    handler: ./hello-openfaas
+    image: lreimer/hello-openfaas:benchmark
+    labels:
+      com.openfaas.scale.min: 5
+      com.openfaas.scale.max: 20
