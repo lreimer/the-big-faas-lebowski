@@ -146,8 +146,6 @@ $ faas build -f hello-openfaas.yml
 $ faas push -f hello-openfaas.yml
 $ faas deploy -f hello-openfaas.yml
 
-$	curl -d '{"serviceName":"hello-openfaas", "replicas": 3}' -X POST http://openfaas.demo/system/scale-function/hello-openfaas -u admin
-
 $ http get http://openfaas.demo/function/hello-openfaas
 $ hey -c 50 -n 1000 http://openfaas.demo/function/hello-openfaas
 $ wrk -c 50 -t 4 -d 30s http://openfaas.demo/function/hello-openfaas
