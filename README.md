@@ -61,6 +61,7 @@ $ kubectl get all -n fission
 
 $ cd fission/
 $ fission environment create --name go --image fission/go-env --builder fission/go-builder
+$ fission env create --name jvm --image fission/jvm-env --version 2 --extract=false
 $ fission environment create --name node --image fission/node-env --mincpu 40 --maxcpu 80 --minmemory 64 --maxmemory 128 --poolsize 4
 $ fission environment create --name python --image fission/python-env:latest --builder fission/python-builder:latest
 
