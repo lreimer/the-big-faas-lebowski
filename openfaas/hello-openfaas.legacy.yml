@@ -1,7 +1,0 @@
-provider:
-  name: openfaas
-functions:
-  hello-openfaas:
-    lang: golang-
-    handler: ./hello-openfaas
-    image: lreimer/hello-openfaas:latest
