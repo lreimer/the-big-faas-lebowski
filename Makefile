@@ -48,7 +48,7 @@ helm-init:
 	@$(K8S) get deploy,svc tiller-deploy -n kube-system
 
 fission-sources:
-	@mkdir -p fission && rm -rf fission/fission/ && rm -rf fission/fission-workflow/
+	@mkdir -p fission && rm -rf fission/fission/ && rm -rf fission/fission-workflow/ && rm -rf fission/fission-ui/
 	@git clone --depth 1 https://github.com/fission/fission.git fission/fission
 	@git clone --depth 1 https://github.com/fission/fission-workflow.git fission/fission-workflow
 	@git clone --depth 1 https://github.com/fission/fission-ui.git fission/fission-ui
