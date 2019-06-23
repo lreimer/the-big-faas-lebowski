@@ -172,6 +172,10 @@ $ faas deploy -f stack.yml
 $ kubectl scale deployment gateway --replicas=5 -n openfaas
 
 $ kubectl get all -n openfaas
+$ kubectl get all -n openfaas-fn
+
+$ kubectl get svc -n openfaas gateway-external -o wide
+
 $ http get http://<gateway-external-ip>:8080/function/hello-openfaas
 $ hey -c 50 -z 30s http://<gateway-external-ip>:8080/function/hello-openfaas
 $ wrk -c 50 -t 4 -d 30s http://<gateway-external-ip>:8080/function/hello-openfaas

@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+ kind: Ingress
+ metadata:
+   name: gateway-external
+   namespace: openfaas
+ spec:
+   rules:
+   - host: openfaas.demo
+     http:
+       paths:
+       - path: /
+         backend:
+           serviceName: gateway-external
+           servicePort: 8080
