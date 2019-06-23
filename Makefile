@@ -72,7 +72,6 @@ fission-delete:
 	@$(K8S) delete crd timetriggers.fission.io --ignore-not-found=true
 	@$(K8S) delete ns fission --ignore-not-found=true
 	@$(K8S) delete ns fission-builder --ignore-not-found=true
-	@$(K8S) delete ns fission-function --ignore-not-found=true
 
 kubeless-sources:
 	@mkdir -p kubeless && rm -rf kubeless/kubeless/
