@@ -55,7 +55,7 @@ fission-sources:
 
 fission-install:
 	# we could also use the fission-all Helm chart
-	@helm install --name fission --namespace fission https://github.com/fission/fission/releases/download/1.1.0/fission-core-1.1.0.tgz
+	@helm install --name fission --namespace fission https://github.com/fission/fission/releases/download/1.3.0/fission-core-1.3.0.tgz
 	@$(K8S) apply -f fission/fission-ui/docker/fission-ui.yaml
 	@$(K8S) apply -f fission/fission-ui.yaml
 
@@ -71,6 +71,8 @@ fission-delete:
 	@$(K8S) delete crd recorders.fission.io --ignore-not-found=true
 	@$(K8S) delete crd timetriggers.fission.io --ignore-not-found=true
 	@$(K8S) delete ns fission --ignore-not-found=true
+	@$(K8S) delete ns fission-builder --ignore-not-found=true
+	@$(K8S) delete ns fission-function --ignore-not-found=true
 
 kubeless-sources:
 	@mkdir -p kubeless && rm -rf kubeless/kubeless/

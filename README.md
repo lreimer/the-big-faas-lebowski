@@ -78,6 +78,17 @@ $ http get http://fission.demo/hello-fission
 $ hey -c 50 -z 30s http://fission.demo/hello-fission
 $ wrk -c 50 -t 4 -d 30s http://fission.demo/hello-fission
 
+$ fission env create --name jvm --image fission/jvm-env --version 2 --keeparchive=true --builder fission/jvm-builder
+$ cd fission/examples/jvm
+$ mvn clean package
+$ fission fn create --name hello-jvm --deploy target/hello-world-1.0-SNAPSHOT-jar-with-dependencies.jar --env jvm --entrypoint io.fission.HelloWorld
+$ fission pkg info --name <pkg-name>
+$ fission function list
+$ fission fn test --name hello-jvm
+
+$ fission route create --name hello-jvm --function hello-jvm --url /hello-jvm --createingress --method GET --host fission.demo
+$ http get http://fission.demo/hello-jvm
+
 $ make fission-delete
 ```
 
