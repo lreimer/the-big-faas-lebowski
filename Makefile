@@ -22,7 +22,7 @@ cluster:
 
 	@$(GCP) container clusters create $(NAME) --num-nodes=5 --enable-autoscaling --min-nodes=5 --max-nodes=10
 	@$(K8S) create clusterrolebinding cluster-admin-binding --clusterrole=cluster-admin --user=$$(gcloud config get-value core/account)
-	@$(K8S) create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended/kubernetes-dashboard.yaml
+	@$(K8s) apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta1/aio/deploy/recommended.yaml
 	@$(K8S) apply -f traefik/traefik-rbac.yaml
 	@$(K8S) apply -f traefik/traefik-ds.yaml
 	@$(K8S) apply -f traefik/traefik-ui.yaml
@@ -110,7 +110,6 @@ openfaas-sources:
 	@git clone --depth 1 https://github.com/openfaas/faas-netes.git openfaas/faas-netes
 
 openfaas-install:
-	@curl -sL https://cli.openfaas.com | sudo sh
 	@$(K8S) apply -f openfaas/faas-netes/namespaces.yml
 	@helm repo add openfaas https://openfaas.github.io/faas-netes/
 	@$(K8S) -n openfaas create secret generic basic-auth --from-literal=basic-auth-user=admin --from-literal=basic-auth-password=openfaas
@@ -157,7 +156,7 @@ dashboard:
 	@$(K8S) proxy & 2>&1
 	@sleep 3
 	@$(GCP) config config-helper --format=json | jq .credential.access_token
-	@open http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
+	@open http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
 
 destroy:
 	@$(GCP) container clusters delete $(NAME) --async --quiet
