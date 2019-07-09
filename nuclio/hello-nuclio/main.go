@@ -5,9 +5,12 @@ import (
 )
 
 func Handler(context *nuclio.Context, event nuclio.Event) (interface{}, error) {
-  return nuclio.Response{
+	context.Logger.Info("This is an unstrucured %s", "log")
+
+	return nuclio.Response{
 		StatusCode:  200,
-		ContentType: "text/plain",
-		Body:        []byte("Hello from Nuclio!"),
+		ContentType: "application/text",
+		Body:        []byte("Hello, from nuclio :]"),
 	}, nil
 }
+

@@ -1,17 +1,27 @@
-apiVersion: "nuclio.io/v1beta1"
-kind: "NuclioFunction"
+apiVersion: "nuclio.io/v1"
+kind: NuclioFunction
+metadata:
+  name: hello-nuclio
+  labels:
+    nuclio.io/project-name: hello-nuclio
 spec:
-  runtime: "golang"
+  description: "Showcases unstructured logging and a structured response."
+  handler: "main:Handler"
+  runtime: golang
   minReplicas: 1
-  maxReplicas: 20
-  handler: main:Handler
+  maxReplicas: 1
   triggers:
-    http:
-      maxWorkers: 8
+    nuclio-demo:
+      class: ""
       kind: http
+      maxWorkers: 8
       attributes:
         ingresses:
-          nuclio-demo:
+          "0":
             host: nuclio.demo
             paths:
-            - /hello-nuclio
+              - /hello-nuclio
+  version: 1
+  alias: latest
+  serviceType: NodePort
+

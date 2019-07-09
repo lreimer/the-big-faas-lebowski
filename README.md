@@ -131,7 +131,7 @@ $ kubectl get all -n nuclio
 
 $ cd nuclio/
 $ ./nuctl create project hello-nuclio -n nuclio
-$ ./nuctl deploy hello-nuclio --path hello-nuclio/ --project-name hello-nuclio -n nuclio --max-replicas 20
+$ ./nuctl deploy hello-nuclio --path hello-nuclio/main.go --file hello-nuclio/function.yaml --project-name hello-nuclio -n nuclio --max-replicas 20 --registry lreimer
 
 $ open http://nuclio-ui.demo/
 $ http get http://nuclio.demo/hello-nuclio

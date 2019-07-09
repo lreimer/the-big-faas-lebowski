@@ -74,7 +74,7 @@ fission-delete:
 	@$(K8S) delete ns fission-builder --ignore-not-found=true
 
 kubeless-sources:
-	@mkdir -p kubeless && rm -rf kubeless/kubeless/
+	@mkdir -p kubeless && rm -rf kubeless/kubeless/ && rm -rf kubeless/kubeless-ui
 	@git clone --depth 1 https://github.com/kubeless/kubeless.git kubeless/kubeless
 	@git clone --depth 1 https://github.com/kubeless/kubeless-ui.git kubeless/kubeless-ui
 
@@ -127,7 +127,7 @@ nuclio-sources:
 	@mkdir -p nuclio && rm -rf nuclio/nuclio/ && rm -rf nuclio/templates/
 	@git clone --depth 1 https://github.com/nuclio/nuclio.git nuclio/nuclio/
 	@git clone --depth 1 https://github.com/nuclio/nuclio-templates.git nuclio/templates/
-	@curl -sL https://github.com/nuclio/nuclio/releases/download/1.1.2/nuctl-1.1.2-darwin-amd64 -o nuclio/nuctl && chmod +x nuclio/nuctl
+	@curl -sL https://github.com/nuclio/nuclio/releases/download/1.1.11/nuctl-1.1.11-darwin-amd64 -o nuclio/nuctl && chmod +x nuclio/nuctl
 
 nuclio-install:
 	@$(K8S) create namespace nuclio
