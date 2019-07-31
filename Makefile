@@ -22,7 +22,7 @@ cluster:
 
 	@$(GCP) container clusters create $(NAME) --num-nodes=5 --enable-autoscaling --min-nodes=5 --max-nodes=10
 	@$(K8S) create clusterrolebinding cluster-admin-binding --clusterrole=cluster-admin --user=$$(gcloud config get-value core/account)
-	@$(K8s) apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta1/aio/deploy/recommended.yaml
+	@$(K8S) apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta1/aio/deploy/recommended.yaml
 	@$(K8S) apply -f traefik/traefik-rbac.yaml
 	@$(K8S) apply -f traefik/traefik-ds.yaml
 	@$(K8S) apply -f traefik/traefik-ui.yaml
@@ -127,7 +127,7 @@ nuclio-sources:
 	@mkdir -p nuclio && rm -rf nuclio/nuclio/ && rm -rf nuclio/templates/
 	@git clone --depth 1 https://github.com/nuclio/nuclio.git nuclio/nuclio/
 	@git clone --depth 1 https://github.com/nuclio/nuclio-templates.git nuclio/templates/
-	@curl -sL https://github.com/nuclio/nuclio/releases/download/1.1.11/nuctl-1.1.11-darwin-amd64 -o nuclio/nuctl && chmod +x nuclio/nuctl
+	@curl -sL https://github.com/nuclio/nuclio/releases/download/1.1.12/nuctl-1.1.12-darwin-amd64 -o nuclio/nuctl && chmod +x nuclio/nuctl
 
 nuclio-install:
 	@$(K8S) create namespace nuclio

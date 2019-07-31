@@ -1,0 +1,21 @@
+rabbitmq:
+  ## RabbitMQ application username
+  ## ref: https://github.com/bitnami/bitnami-docker-rabbitmq#environment-variables
+  ##
+  username: user
+
+  ## RabbitMQ application password
+  ## ref: https://github.com/bitnami/bitnami-docker-rabbitmq#environment-variables
+  ##
+  password: password
+
+  ## Erlang cookie to determine whether different nodes are allowed to communicate with each other
+  ## ref: https://github.com/bitnami/bitnami-docker-rabbitmq#environment-variables
+  ##
+  erlangCookie: secretcookie
+
+replicas: 3
+
+ingress:
+  ## Set to true to enable ingress record generation
+  enabled: false
