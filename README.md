@@ -129,11 +129,13 @@ $ make nuclio-sources
 $ make nuclio-install
 $ kubectl get all -n nuclio
 
+$ helm install --name nuclio-rabbitmq -f rabbitmq/values.yaml stable/rabbitmq
+
 $ cd nuclio/
 $ ./nuctl create project hello-nuclio -n nuclio
 $ ./nuctl deploy hello-nuclio --path hello-nuclio/main.go --file hello-nuclio/function.yaml --project-name hello-nuclio -n nuclio --max-replicas 20 --registry lreimer
 
-$ open http://nuclio-ui.demo/
+$ open http://nuclio-ui.demo:8070/
 $ http get http://nuclio.demo/hello-nuclio
 $ hey -c 50 -z 30s http://nuclio.demo/hello-nuclio
 $ wrk -c 50 -t 4 -d 30s http://nuclio.demo/hello-nuclio

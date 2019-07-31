@@ -13,4 +13,3 @@ func Handler(context *nuclio.Context, event nuclio.Event) (interface{}, error) {
 		Body:        []byte("Hello, from nuclio :]"),
 	}, nil
 }
-

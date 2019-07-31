@@ -16,6 +16,9 @@ rabbitmq:
 
 replicas: 3
 
+service:
+  type: NodePort
+
 ingress:
   ## Set to true to enable ingress record generation
   enabled: false
