@@ -1,4 +1,4 @@
-NAME = big-faas-lebowski
+NAME = osad-demo
 VERSION = 1.0.0
 GCP = gcloud
 ZONE = europe-west1-b
@@ -22,7 +22,7 @@ cluster:
 
 	@$(GCP) container clusters create $(NAME) --num-nodes=5 --enable-autoscaling --min-nodes=5 --max-nodes=10
 	@$(K8S) create clusterrolebinding cluster-admin-binding --clusterrole=cluster-admin --user=$$(gcloud config get-value core/account)
-	@$(K8S) apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta1/aio/deploy/recommended.yaml
+	@$(K8S) apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml
 	@$(K8S) apply -f traefik/traefik-rbac.yaml
 	@$(K8S) apply -f traefik/traefik-ds.yaml
 	@$(K8S) apply -f traefik/traefik-ui.yaml
@@ -80,12 +80,12 @@ kubeless-sources:
 
 kubeless-install:
 	@$(K8S) create ns kubeless
-	@$(K8S) create -f https://github.com/kubeless/kubeless/releases/download/v1.0.3/kubeless-v1.0.3.yaml
+	@$(K8S) create -f https://github.com/kubeless/kubeless/releases/download/v1.0.4/kubeless-v1.0.4.yaml
 	@$(K8S) create -f https://raw.githubusercontent.com/kubeless/kubeless-ui/master/k8s.yaml
 	@$(K8S) apply -f kubeless/kubeless-ui.yaml
 
 kubeless-delete:
-	@$(K8S) delete -f https://github.com/kubeless/kubeless/releases/download/v1.0.3/kubeless-v1.0.3.yaml --ignore-not-found=true
+	@$(K8S) delete -f https://github.com/kubeless/kubeless/releases/download/v1.0.4/kubeless-v1.0.4.yaml --ignore-not-found=true
 	@$(K8S) delete crd cronjobtriggers.kubeless.io --ignore-not-found=true
 	@$(K8S) delete crd functions.kubeless.io --ignore-not-found=true
 	@$(K8S) delete crd httptriggers.kubeless.io --ignore-not-found=true
