@@ -1,4 +1,4 @@
-NAME = osad-demo
+NAME = faas-lebowski
 VERSION = 1.0.0
 GCP = gcloud
 ZONE = europe-west1-b
@@ -20,7 +20,7 @@ cluster:
 	@echo "Create GKE Cluster"
 	# --[no-]enable-basic-auth --[no-]issue-client-certificate
 
-	@$(GCP) container clusters create $(NAME) --num-nodes=5 --enable-autoscaling --min-nodes=5 --max-nodes=10
+	@$(GCP) container clusters create $(NAME) --num-nodes=5 --enable-autoscaling --min-nodes=5 --max-nodes=10 --machine-type=n1-standard-4 --enable-stackdriver-kubernetes --enable-ip-alias --enable-autorepair --scopes cloud-platform --addons HorizontalPodAutoscaling,HttpLoadBalancing --cluster-version "1.14"
 	@$(K8S) create clusterrolebinding cluster-admin-binding --clusterrole=cluster-admin --user=$$(gcloud config get-value core/account)
 	@$(K8S) apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml
 	@$(K8S) apply -f traefik/traefik-rbac.yaml
@@ -145,6 +145,20 @@ nuclio-delete:
 	@$(K8S) delete -f nuclio/nuclio/hack/gke/resources/nuclio.yaml --ignore-not-found=true
 	@$(K8S) delete -f nuclio/nuclio/hack/k8s/resources/nuclio-rbac.yaml --ignore-not-found=true
 	@$(K8S) delete namespace nuclio --ignore-not-found=true
+
+knative-gloo:
+	@glooctl install gateway
+	@glooctl install knative --install-knative --install-eventing --install-monitoring
+	@$(K8S) apply --filename https://storage.googleapis.com/tekton-releases/pipeline/previous/v0.8.0/release.yaml
+
+	@$(K8S) get pods --namespace gloo-system
+	@$(K8S) get pods --namespace knative-serving
+	@$(K8S) get pods --namespace knative-eventing
+	@$(K8S) get pods --namespace knative-monitoring
+	@$(K8S) get pods --namespace tekton-pipelines
+
+	@$(K8S) get svc -n gloo-system
+	@$(K8S) edit cm config-domain --namespace knative-serving
 
 gcloud-login:
 	@$(GCP) auth application-default login

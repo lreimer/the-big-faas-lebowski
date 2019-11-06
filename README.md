@@ -119,38 +119,6 @@ $ wrk -c 50 -t 4 -d 30s http://kubeless.demo/hello-kubeless
 $ make kubeless-delete
 ```
 
-## Nuclio Demo
-
-This demo deploys a simple Go function that scales up to 20 replicas. The ingress used here
-is Traefik.
-
-```
-$ make nuclio-sources
-$ make nuclio-install
-$ kubectl get all -n nuclio
-
-$ helm install --name nuclio-rabbitmq -f rabbitmq/values.yaml stable/rabbitmq
-
-$ cd nuclio/
-$ ./nuctl create project hello-nuclio -n nuclio
-$ ./nuctl deploy hello-nuclio --path hello-nuclio/main.go --file hello-nuclio/function.yaml --project-name hello-nuclio -n nuclio --max-replicas 20 --registry lreimer
-
-$ open http://nuclio-ui.demo:8070/
-$ http get http://nuclio.demo/hello-nuclio
-$ hey -c 50 -z 30s http://nuclio.demo/hello-nuclio
-$ wrk -c 50 -t 4 -d 30s http://nuclio.demo/hello-nuclio
-
-$ make nuclio-delete
-```
-
-Note: sometimes the CLI times out during deployment of the function. Use the dashboard instead.
-In case Nuclio has trouble accessing the Docker registry, make sure you have the correct credentials
-set in the Kubernetes secret.
-
-```
-$ kubectl get secrets registry-credentials -n nuclio -o 'go-template={{index .data ".dockerconfigjson"}}' | base64 -D
-```
-
 ## OpenFaas Demo
 
 The OpenFaas demo has been tuned with the help of @alexellis. The function itself has been labeled
@@ -187,6 +155,44 @@ $ hey -c 50 -z 30s http://openfaas.demo/function/hello-openfaas
 $ wrk -c 50 -t 4 -d 30s http://openfaas.demo/function/hello-openfaas
 
 $ make openfaas-delete
+```
+
+## Knative Demo
+
+
+## Kyma Demo
+
+
+## Nuclio Demo
+
+This demo deploys a simple Go function that scales up to 20 replicas. The ingress used here
+is Traefik.
+
+```
+$ make nuclio-sources
+$ make nuclio-install
+$ kubectl get all -n nuclio
+
+$ helm install --name nuclio-rabbitmq -f rabbitmq/values.yaml stable/rabbitmq
+
+$ cd nuclio/
+$ ./nuctl create project hello-nuclio -n nuclio
+$ ./nuctl deploy hello-nuclio --path hello-nuclio/main.go --file hello-nuclio/function.yaml --project-name hello-nuclio -n nuclio --max-replicas 20 --registry lreimer
+
+$ open http://nuclio-ui.demo:8070/
+$ http get http://nuclio.demo/hello-nuclio
+$ hey -c 50 -z 30s http://nuclio.demo/hello-nuclio
+$ wrk -c 50 -t 4 -d 30s http://nuclio.demo/hello-nuclio
+
+$ make nuclio-delete
+```
+
+Note: sometimes the CLI times out during deployment of the function. Use the dashboard instead.
+In case Nuclio has trouble accessing the Docker registry, make sure you have the correct credentials
+set in the Kubernetes secret.
+
+```
+$ kubectl get secrets registry-credentials -n nuclio -o 'go-template={{index .data ".dockerconfigjson"}}' | base64 -D
 ```
 
 ## Fn Project Demo
