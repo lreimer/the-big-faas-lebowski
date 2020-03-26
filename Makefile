@@ -124,12 +124,15 @@ fnproject-install:
 fnproject-delete:
 	@helm delete --purge fnproject
 
+openfaas-arcade:
+	@curl -SLsf https://dl.get-arkade.dev/ | sudo sh
+
 openfaas-sources:
 	@mkdir -p openfaas && rm -rf openfaas/faas/ && rm -rf openfaas/faas-netes/
 	@git clone --depth 1 https://github.com/openfaas/faas.git openfaas/faas
 	@git clone --depth 1 https://github.com/openfaas/faas-netes.git openfaas/faas-netes
 
-openfaas-install:
+openfaas-install-helm2:
 	@$(K8S) apply -f openfaas/faas-netes/namespaces.yml
 	@helm repo add openfaas https://openfaas.github.io/faas-netes/
 	@$(K8S) -n openfaas create secret generic basic-auth --from-literal=basic-auth-user=admin --from-literal=basic-auth-password=openfaas
@@ -137,6 +140,13 @@ openfaas-install:
 	@$(K8S) apply -f openfaas/openfaas-gateway.yaml
 	export OPENFAAS_URL=http://openfaas.demo
 	@faas-cli login --password openfaas
+
+openfaas-install-arcade:
+	@ark install openfaas --load-balancer
+	@kubectl get svc -o wide gateway-external -n openfaas
+
+openfaas-deploy:
+	faas-cli deploy -f https://raw.githubusercontent.com/openfaas/faas/master/stack.yml
 
 openfaas-delete:
 	@helm delete --purge openfaas
