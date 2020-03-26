@@ -53,9 +53,21 @@ fission-sources:
 	@git clone --depth 1 https://github.com/fission/fission-workflow.git fission/fission-workflow
 	@git clone --depth 1 https://github.com/fission/fission-ui.git fission/fission-ui
 
-fission-install:
+fission-manual:
+	@$(K8S) create namespace fission
+	@$(K8S) -n fission apply -f https://github.com/fission/fission/releases/download/1.8.0/fission-core-1.8.0.yaml
+
+fission-install-helm2:
 	# we could also use the fission-all Helm chart
-	@helm install --name fission --namespace fission https://github.com/fission/fission/releases/download/1.3.0/fission-core-1.3.0.tgz
+	@$(K8S) create namespace fission
+	@helm install --name fission --namespace fission https://github.com/fission/fission/releases/download/1.8.0/fission-core-1.8.0.tgz
+	@$(K8S) apply -f fission/fission-ui/docker/fission-ui.yaml
+	@$(K8S) apply -f fission/fission-ui.yaml
+
+fission-install-helm3:
+	# we could also use the fission-all Helm chart
+	@$(K8S) create namespace fission
+	@helm install --namespace fission --name-template fission https://github.com/fission/fission/releases/download/1.8.0/fission-core-1.8.0.tgz
 	@$(K8S) apply -f fission/fission-ui/docker/fission-ui.yaml
 	@$(K8S) apply -f fission/fission-ui.yaml
 
