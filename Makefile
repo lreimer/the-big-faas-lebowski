@@ -144,6 +144,7 @@ openfaas-install-helm2:
 openfaas-install-arcade:
 	@ark install openfaas --load-balancer
 	@kubectl get svc -o wide gateway-external -n openfaas
+	@$(K8S) apply -f openfaas/openfaas-gateway.yaml
 
 openfaas-deploy:
 	faas-cli deploy -f https://raw.githubusercontent.com/openfaas/faas/master/stack.yml

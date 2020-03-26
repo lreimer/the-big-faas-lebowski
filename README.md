@@ -154,32 +154,19 @@ $ open http://$OPENFAAS_URL
 
 $ make openfaas-deploy
 
-# https://github.com/pmlopes/openfaas-quarkus-native-template
-$ faas template pull https://github.com/pmlopes/openfaas-quarkus-native-template
-
-$ mkdir quarkus-function
-$ cd quarkus-function
-$ faas new --lang quarkus-native quarkus-function
-$ mvn clean package quarkus:dev
-```
-
-```
-$ kubectl get all -n openfaas
-$ export OPENFAAS_URL=http://openfaas.demo
+$ faas template pull https://github.com/openfaas-incubator/golang-http-template
 
 $ cd openfaas
 $ faas template pull https://github.com/openfaas-incubator/golang-http-template
 
-$ faas build -f stack.yml
-$ faas push -f stack.yml
-$ faas deploy -f stack.yml
+$ faas build -f hello-openfaas.yml
+$ faas push -f hello-openfaas.yml
+$ faas deploy -f hello-openfaas.yml
 
 $ kubectl scale deployment gateway --replicas=5 -n openfaas
 
 $ kubectl get all -n openfaas
 $ kubectl get all -n openfaas-fn
-
-$ kubectl get svc -n openfaas gateway-external -o wide
 
 $ http get http://<gateway-external-ip>:8080/function/hello-openfaas
 $ hey -c 50 -z 30s http://<gateway-external-ip>:8080/function/hello-openfaas
@@ -188,6 +175,18 @@ $ wrk -c 50 -t 4 -d 30s http://<gateway-external-ip>:8080/function/hello-openfaa
 $ http get http://openfaas.demo/function/hello-openfaas
 $ hey -c 50 -z 30s http://openfaas.demo/function/hello-openfaas
 $ wrk -c 50 -t 4 -d 30s http://openfaas.demo/function/hello-openfaas
+
+# https://github.com/pmlopes/openfaas-quarkus-native-template
+$ faas template pull https://github.com/pmlopes/openfaas-quarkus-native-template
+
+$ mkdir quarkus-function
+$ cd quarkus-function
+$ faas new --lang quarkus-native quarkus-function
+$ mvn clean package
+
+$ faas build -f quarkus-function.yml
+$ faas push -f quarkus-function.yml
+$ faas deploy -f quarkus-function.yml
 
 $ make openfaas-delete
 ```
