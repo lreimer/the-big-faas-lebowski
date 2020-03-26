@@ -138,9 +138,33 @@ have a look at https://docs.openfaas.com/architecture/performance/
 
 ```
 $ make openfaas-sources
-$ make openfaas-install
-$ kubectl get all -n openfaas
+$ make openfaas-install-arcade
 
+$ kubectl get svc -o wide gateway-external -n openfaas
+$ export OPENFAAS_URL=":8080"
+
+# This command retrieves your password
+$ PASSWORD=$(kubectl get secret -n openfaas basic-auth -o jsonpath="{.data.basic-auth-password}" | base64 --decode; echo)
+
+# This command logs in and saves a file to ~/.openfaas/config.yml
+$ echo -n $PASSWORD | faas-cli login --username admin --password-stdin
+
+$ faas-cli list
+$ open http://$OPENFAAS_URL
+
+$ make openfaas-deploy
+
+# https://github.com/pmlopes/openfaas-quarkus-native-template
+$ faas template pull https://github.com/pmlopes/openfaas-quarkus-native-template
+
+$ mkdir quarkus-function
+$ cd quarkus-function
+$ faas new --lang quarkus-native quarkus-function
+$ mvn clean package quarkus:dev
+```
+
+```
+$ kubectl get all -n openfaas
 $ export OPENFAAS_URL=http://openfaas.demo
 
 $ cd openfaas
