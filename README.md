@@ -104,15 +104,26 @@ $ kubectl get all -n kubeless
 $ kubeless get-server-config
 
 $ cd kubeless/hello-kubeless/
-$ kubeless function deploy hello-kubeless --from-file func.go --handler func.Handler --runtime go1.10 --cpu 100m
+$ kubeless function deploy hello-kubeless --from-file func.go --handler func.Handler --runtime go1.12 --cpu 500m
 $ kubeless function call hello-kubeless
 
 $ kubeless trigger http create hello-kubeless --function-name hello-kubeless --path hello-kubeless --gateway traefik --hostname kubeless.demo
 
+http get http://kubeless.demo/hello-kubeless
+
+$ cd kubeless/java-kubeless/
+$ kubeless function deploy hello-java8 --runtime java1.8 --handler HelloJug.hello --from-file HelloJug.java
+$ kubeless function deploy hello-java11 --runtime java11 --handler HelloJug.hello --from-file HelloJug.java
+
+$ kubeless function call hello-java8
+$ kubeless trigger http create hello-java8 --function-name hello-java8 --path hello-java8 --gateway traefik --hostname kubeless.demo
+
+$ kubeless function call hello-java11
+$ kubeless trigger http create hello-java11 --function-name hello-java11 --path hello-java11 --gateway traefik --hostname kubeless.demo
+
 $ kubeless autoscale create hello-kubeless --min 5 --max 20 --metric cpu --value 75
 $ kubectl scale deployment hello-kubeless --replicas 5
 
-$ http get http://kubeless.demo/hello-kubeless
 $ hey -c 50 -z 30s http://kubeless.demo/hello-kubeless
 $ wrk -c 50 -t 4 -d 30s http://kubeless.demo/hello-kubeless
 
