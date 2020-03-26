@@ -80,12 +80,12 @@ kubeless-sources:
 
 kubeless-install:
 	@$(K8S) create ns kubeless
-	@$(K8S) create -f https://github.com/kubeless/kubeless/releases/download/v1.0.4/kubeless-v1.0.4.yaml
+	@$(K8S) create -f https://github.com/kubeless/kubeless/releases/download/v1.0.6/kubeless-v1.0.6.yaml
 	@$(K8S) create -f https://raw.githubusercontent.com/kubeless/kubeless-ui/master/k8s.yaml
 	@$(K8S) apply -f kubeless/kubeless-ui.yaml
 
 kubeless-delete:
-	@$(K8S) delete -f https://github.com/kubeless/kubeless/releases/download/v1.0.4/kubeless-v1.0.4.yaml --ignore-not-found=true
+	@$(K8S) delete -f https://github.com/kubeless/kubeless/releases/download/v1.0.6/kubeless-v1.0.6.yaml --ignore-not-found=true
 	@$(K8S) delete crd cronjobtriggers.kubeless.io --ignore-not-found=true
 	@$(K8S) delete crd functions.kubeless.io --ignore-not-found=true
 	@$(K8S) delete crd httptriggers.kubeless.io --ignore-not-found=true
